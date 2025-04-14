@@ -4,7 +4,7 @@ from snowflake.snowpark.context import get_active_session
 from snowflake.snowpark.functions import col, when_matched
 
 # Write directly to the app
-st.title("ðŸ§¾ Pending Smoothie Orders")
+st.title("Pending Smoothie Orders")
 st.write("Orders that need to be filled.")
 
 # Get the current Snowflake session
