@@ -39,11 +39,11 @@ if ingredients_list:
         # Safe parameterized SQL insert
         insert_query = """
             INSERT INTO smoothies.public.orders (ingredients, NAME_ON_ORDER)
-            VALUES (?, ?)
+            VALUES (%s, %s)
         """
         
-        # Execute the SQL query using parameter binding
-        session.sql(insert_query).bind([ingredients_string, name_on_order]).collect()
+        # Execute the SQL query with parameters (instead of bind())
+        session.sql(insert_query, parameters=(ingredients_string, name_on_order)).collect()
         
         # Display success message
         st.success('Your Smoothie is ordered!', icon="✅")
