@@ -9,6 +9,17 @@ def escape_sql(value):
         return ''
     return value.replace("'", "''")
 
+# Function to fetch fruit nutritional information
+def get_fruit_nutrition(fruit_name):
+    try:
+        smoothiefroot_response = requests.get(f"https://my.smoothiefroot.com/api/fruit/{fruit_name}")
+        if smoothiefroot_response.status_code == 200:
+            return smoothiefroot_response.json()
+        else:
+            return None
+    except Exception as api_error:
+        return None
+
 # App title and instructions
 st.title(":cup_with_straw: Customize Your Smoothie! :cup_with_straw:")
 st.write("Choose the fruits you want in your custom Smoothie!")
@@ -34,25 +45,26 @@ ingredients_list = st.multiselect(
     max_selections=5
 )
 
-# Display external fruit data (e.g. watermelon info from external API)
-try:
-    smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/"+fruit_chosen)
-    if smoothiefroot_response.status_code == 200:
-        st.subheader(fruit_chosen + 'Nutrition Information')
-        st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
-    else:
-        st.warning("Could not load watermelon data.")
-except Exception as api_error:
-    st.error("Error loading fruit info:")
-    st.exception(api_error)
-
-# Handle form submission
+# Display external fruit data (e.g. nutritional info for each selected fruit)
 if ingredients_list:
+    for fruit in ingredients_list:
+        # Fetch fruit nutritional information
+        fruit_nutrition = get_fruit_nutrition(fruit)
+
+        if fruit_nutrition:
+            st.subheader(f"{fruit} Nutrition Information")
+            # Display nutritional info as a table
+            st.dataframe(data=fruit_nutrition, use_container_width=True)
+        else:
+            st.warning(f"Could not load data for {fruit}. Please try again later.")
+
+# Handle form submission for the smoothie order
+if ingredients_list and name_on_order:
     ingredients_string = ' '.join(ingredients_list)
 
     # Show submit button
     time_to_insert = st.button('Submit Order')
-   
+
     if time_to_insert:
         # Escape inputs for SQL safety
         safe_ingredients = escape_sql(ingredients_string)
