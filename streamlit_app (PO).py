@@ -46,4 +46,4 @@ if my_dataframe.count() > 0:
             st.exception(e)
 
 else:
-    st.success("There are no pending orders right now", icon="ðŸ‘")
+    st.success("Order(s) Updated!", icon="👍")
