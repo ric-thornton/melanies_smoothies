@@ -36,14 +36,14 @@ if ingredients_list:
     time_to_insert = st.button('Submit Order')
 
     if time_to_insert:
-        # Safe parameterized SQL insert
-        insert_query = """
+        # Dynamically format the SQL query
+        insert_query = f"""
             INSERT INTO smoothies.public.orders (ingredients, NAME_ON_ORDER)
-            VALUES (%s, %s)
+            VALUES ('{ingredients_string}', '{name_on_order}')
         """
         
-        # Execute the SQL query with parameters (instead of bind())
-        session.sql(insert_query, parameters=(ingredients_string, name_on_order)).collect()
+        # Execute the SQL query directly
+        session.sql(insert_query).collect()
         
         # Display success message
         st.success('Your Smoothie is ordered!', icon="✅")
