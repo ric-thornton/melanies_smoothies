@@ -36,8 +36,9 @@ ingredients_list = st.multiselect(
 
 # Display external fruit data (e.g. watermelon info from external API)
 try:
-    smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+    smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/"+fruit_chosen)
     if smoothiefroot_response.status_code == 200:
+        st.subheader(fruit_chosen + 'Nutrition Information')
         st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
     else:
         st.warning("Could not load watermelon data.")
