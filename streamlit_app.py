@@ -59,3 +59,8 @@ if ingredients_list:
             st.success('Your Smoothie is ordered!', icon="✅")
         except Exception as e:
             st.error(f"Order failed: {e}")
+
+#New section to display smoothiefroot nutrition information
+import requests
+smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+st.text(smoothiefroot_response)
