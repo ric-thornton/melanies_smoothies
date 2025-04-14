@@ -39,7 +39,7 @@ if my_dataframe.count() > 0:
                     })
                 ]
             )
-            st.success("Order(s) Updated!", icon="ðŸ‘")
+            st.success("Order(s) Updated!", icon="👍")
         
         except Exception as e:
             st.error("Something went wrong.")
