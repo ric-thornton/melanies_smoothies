@@ -38,7 +38,6 @@ ingredients_list = st.multiselect(
 try:
     smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
     if smoothiefroot_response.status_code == 200:
-        st.subheader("🍉 Watermelon Nutritional Info")
         st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
     else:
         st.warning("Could not load watermelon data.")
