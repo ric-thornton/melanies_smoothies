@@ -35,10 +35,14 @@ session = cnx.session()
 # Load available fruits from Snowflake table
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'), col('SEARCH_ON'))
 st.dataframe(data=my_dataframe,use_container_width=True)
-st.stop()
+# st.stop()  # Commented this out so the rest of the app works
 
-# Convert to list for use in multiselect
-fruit_options = my_dataframe.to_pandas()['FRUIT_NAME'].tolist()
+# Convert dataframe to pandas and create mapping for API lookup
+fruit_df = my_dataframe.to_pandas()
+fruit_name_to_search_on = dict(zip(fruit_df['FRUIT_NAME'], fruit_df['SEARCH_ON']))
+
+# Use FRUIT_NAME list for multiselect
+fruit_options = fruit_df['FRUIT_NAME'].tolist()
 
 # Let the user select ingredients
 ingredients_list = st.multiselect(
@@ -50,8 +54,11 @@ ingredients_list = st.multiselect(
 # Display external fruit data (e.g. nutritional info for each selected fruit)
 if ingredients_list:
     for fruit in ingredients_list:
+        # Look up SEARCH_ON value
+        search_key = fruit_name_to_search_on.get(fruit, fruit)
+
         # Fetch fruit nutritional information
-        fruit_nutrition = get_fruit_nutrition(fruit)
+        fruit_nutrition = get_fruit_nutrition(search_key)
 
         if fruit_nutrition:
             st.subheader(f"{fruit} Nutrition Information")
